@@ -55,13 +55,4 @@ public class JobsReader {
         return job;
     }
 
-//    public static void main(String[] args) {
-//
-//
-//        try {
-//            System.out.println(new JobsReader().getJobs().get(0).getJobConfig().toString());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }

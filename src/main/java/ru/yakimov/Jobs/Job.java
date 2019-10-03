@@ -2,9 +2,8 @@ package ru.yakimov.Jobs;
 
 import ru.yakimov.JobConfXML.JobConfiguration;
 
-import java.util.concurrent.Callable;
 
-public abstract class Job implements Callable {
+public abstract class Job extends Thread {
 
     private final int defaultRes = -1;
 

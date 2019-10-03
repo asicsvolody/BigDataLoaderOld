@@ -13,43 +13,6 @@ public class SqoopDataLoader {
     private final Assets assets = Assets.getInstance();
 
 
-//    public int importTableToHDFS() throws IOException, InterruptedException {
-////        deleteHadoopDirectory(new Path(assets.getHDFSDir()));
-//
-//        ProcessBuilder builder = new ProcessBuilder(
-//                "sqoop"
-//                ,"import"
-//                ,"--connect",
-//                String.format("jdbc:mysql://%s:%s/%s?serverTimezone=UTC&zeroDateTimeBehavior=CONVERT_TO_NULL"
-//                        ,assets.getMysqlDomain()
-//                        ,assets.getPort()
-//                        ,assets.getMysqlDatabase()
-//                )
-//                ,"--username"
-//                ,assets.getUser()
-//                ,"--password-file","/user/sqoop.password"
-//                ,"--target-dir"
-//                ,assets.getHDFSDir()
-//                ,"--table"
-//                ,assets.getArgsMap().get(Assets.Args.MYSQL_TABLE)
-//                ,"--split-by","user_id"
-////                ,"--columns","TABLE_SCHEMA,TABLE_NAME,COLUMN_NAME,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH"
-////                ,"--where",String.format("TABLE_NAME='%s' AND TABLE_SCHEMA='%s'",tableName,nameDB)
-//                ,"--as-parquetfile"
-//        );
-//
-//        for (String s : builder.command()) {
-//            System.out.println(s);
-//        }
-//        Process process = builder.start();
-//        process.waitFor();
-//        printProcessErrorStream(process);
-//        return process.exitValue();
-//    }
-
-
-
-
     public int importToHdfsInAvroFiles(JobConfiguration jobConfig, String targetName) throws IOException, InterruptedException {
 
         Path hdfsDirPath = jobConfig.getHdfsDirTo();
