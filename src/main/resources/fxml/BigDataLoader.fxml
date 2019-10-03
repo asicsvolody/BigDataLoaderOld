@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="640.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.yakimov.VisualFXML.ControllerFXML">
+  <children>
+    <MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="File">
+          <items>
+            <MenuItem mnemonicParsing="false" text="New" />
+            <MenuItem mnemonicParsing="false" text="Open…" />
+            <Menu mnemonicParsing="false" text="Open Recent" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Close" />
+            <MenuItem mnemonicParsing="false" text="Save" />
+            <MenuItem mnemonicParsing="false" text="Save As…" />
+            <MenuItem mnemonicParsing="false" text="Revert" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Preferences…" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Quit" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Edit">
+          <items>
+            <MenuItem mnemonicParsing="false" text="Undo" />
+            <MenuItem mnemonicParsing="false" text="Redo" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Cut" />
+            <MenuItem mnemonicParsing="false" text="Copy" />
+            <MenuItem mnemonicParsing="false" text="Paste" />
+            <MenuItem mnemonicParsing="false" text="Delete" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Select All" />
+            <MenuItem mnemonicParsing="false" text="Unselect All" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+          <items>
+            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Label layoutX="38.0" layoutY="12.0" prefHeight="22.0" prefWidth="57.0" text="Mysql" textAlignment="CENTER">
+               <font>
+                  <Font name="Times New Roman Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="21.0" layoutY="37.0" text="domain" />
+            <TextField id="mysqlDomain" fx:id="mysqlDomain" layoutX="84.0" layoutY="32.0" prefHeight="27.0" prefWidth="117.0" promptText="localhost" text="localhost" />
+            <Label layoutX="21.0" layoutY="67.0" text="port" />
+            <TextField id="port" fx:id="port" layoutX="84.0" layoutY="62.0" prefHeight="27.0" prefWidth="117.0" promptText="3306" text="3306" />
+            <Label layoutX="248.0" layoutY="11.0" prefHeight="22.0" prefWidth="57.0" text="HDFS" textAlignment="CENTER">
+               <font>
+                  <Font name="Times New Roman Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="231.0" layoutY="36.0" text="domean" />
+            <TextField id="hdfsDomain" fx:id="hdfsDomain" layoutX="290.0" layoutY="31.0" prefHeight="27.0" prefWidth="117.0" promptText="localhost" text="localhost" />
+            <Label layoutX="231.0" layoutY="66.0" text="port" />
+            <TextField id="port" fx:id="port" layoutX="290.0" layoutY="61.0" prefHeight="27.0" prefWidth="117.0" promptText="8020" text="8020" />
+            <Label layoutX="21.0" layoutY="97.0" text="user" />
+            <TextField id="user" fx:id="user" layoutX="84.0" layoutY="92.0" prefHeight="27.0" prefWidth="117.0" promptText="root" text="vladimir" />
+            <Label layoutX="21.0" layoutY="127.0" text="password" />
+            <Label layoutX="21.0" layoutY="157.0" text="databese" />
+            <TextField id="mysqlDatabase" fx:id="mysqlDatabase" layoutX="84.0" layoutY="152.0" prefHeight="27.0" prefWidth="117.0" text="usersDB" />
+            <Label layoutX="21.0" layoutY="187.0" text="table" />
+            <TextField id="mysqlTable" fx:id="mysqlTable" layoutX="84.0" layoutY="182.0" prefHeight="27.0" prefWidth="117.0" text="users" />
+            <Label layoutX="231.0" layoutY="96.0" text="path dir" />
+            <TextField id="hdfsDir" fx:id="hdfsDir" layoutX="290.0" layoutY="91.0" prefHeight="27.0" prefWidth="117.0" promptText="/data" text="/myData" />
+            <Button id="startBtn" fx:id="startBtn" layoutX="489.0" layoutY="196.0" mnemonicParsing="false" onAction="#start" prefHeight="28.0" prefWidth="106.0" text="START">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <PasswordField fx:id="mysqlPass" layoutX="84.0" layoutY="122.0" prefHeight="27.0" prefWidth="117.0" text="bhbyf.hnftdf" />
+         </children>
+    </AnchorPane>
+      <ScrollPane id="logsPane" prefHeight="362.0" prefWidth="640.0">
+         <content>
+            <VBox />
+         </content>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </ScrollPane>
+  </children>
+</VBox>
