@@ -11,6 +11,8 @@ public class JobConfiguration {
 
     private String jobClassName;
 
+    private String JobName;
+
     private Path hdfsDirTo;
 
     private ArrayList<String> partitionCols;
@@ -43,6 +45,10 @@ public class JobConfiguration {
         this.mysqlConfMap.put(target,mysqlConf);
     }
 
+    public void setJobName(String jobName) {
+        JobName = jobName;
+    }
+
     public String getJobClassName() {
         return jobClassName;
     }
@@ -52,6 +58,10 @@ public class JobConfiguration {
 
     public Path getHdfsDirTo() {
         return hdfsDirTo;
+    }
+
+    public String getJobName() {
+        return JobName;
     }
 
     public void setJobFile(String jobFile) {

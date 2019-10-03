@@ -30,6 +30,9 @@ public class JobConfXmlLoader {
     private static final String TABLE = "table";
     private static final String PRIMARY_KEY = "primaryKey";
 
+    private static final String SEPARATOR = "/";
+
+
 
     @SuppressWarnings({"unchecked", "ConstantConditions"})
     public static JobConfiguration readConf(String configFile){
@@ -46,6 +49,7 @@ public class JobConfXmlLoader {
                     if (startElementConf.getName().getLocalPart().equals(CONFIGURATION)) {
                         config = new JobConfiguration();
                         config.setJobFile(configFile);
+                        config.setJobName(createJobNameFronPath(configFile));
                         Iterator<Attribute> attributes = startElementConf.getAttributes();
                         while (attributes.hasNext()) {
                             Attribute attribute = attributes.next();
@@ -137,5 +141,10 @@ public class JobConfXmlLoader {
             e.printStackTrace();
         }
         return resConfig;
+    }
+
+    private static String createJobNameFronPath(String path){
+        String[] words = path.split(SEPARATOR);
+        return words[words.length-1].split(".")[0];
     }
 }
