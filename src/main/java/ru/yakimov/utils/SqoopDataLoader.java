@@ -1,8 +1,10 @@
-package ru.yakimov;
+package ru.yakimov.utils;
 
 import org.apache.hadoop.fs.Path;
+import ru.yakimov.Assets;
 import ru.yakimov.JobConfXML.JobConfiguration;
 import ru.yakimov.JobConfXML.MysqlConfiguration;
+import ru.yakimov.db.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,13 +14,23 @@ public class SqoopDataLoader {
 
     private final Assets assets = Assets.getInstance();
 
+    public SqoopDataLoader() throws Exception {
+    }
 
-    public int importToHdfsInAvroFiles(JobConfiguration jobConfig, String targetName) throws IOException, InterruptedException {
+
+    public int importToHdfsInAvroFiles(JobConfiguration jobConfig, String targetName) throws Exception {
+
+        Log.write(jobConfig.getJobIdentifier(), "Sqoop get task import");
 
         Path hdfsDirPath = jobConfig.getHdfsDirTo();
+
         MysqlConfiguration mysqlConf = jobConfig.getMysqlConf(targetName);
 
-        deleteHadoopDirectory(hdfsDirPath);
+        if(deleteHadoopDirectory(hdfsDirPath)){
+           Log.write(jobConfig.getJobIdentifier(), "Delete "+ hdfsDirPath.toString() );
+        }
+
+        Log.write(jobConfig.getJobIdentifier(), "Sqoop run process");
 
         Process process = assets.getRt().exec(String.format("sqoop import " +
                 "--connect jdbc:mysql://%s:%s/%s?serverTimezone=UTC&zeroDateTimeBehavior=CONVERT_TO_NULL " +
@@ -35,13 +47,21 @@ public class SqoopDataLoader {
                 ,mysqlConf.getTable()
                 ,hdfsDirPath
         ));
+
+        Log.write(jobConfig.getJobIdentifier(), "Waiting end sqoop process");
+
         process.waitFor();
-        printProcessErrorStream(process);
+
+        printProcessErrorStream(process, jobConfig.getJobIdentifier());
+
+        if(process.exitValue() == 0) {
+            Log.write(jobConfig.getJobIdentifier(), "Sqoop successfully");
+        }
 
         return process.exitValue();
     }
 
-    private void sqoopExportTable(String nameDB, String tableName, String exportFromPath) throws IOException, InterruptedException {
+    private void sqoopExportTable(String nameDB, String tableName, String exportFromPath) throws Exception {
 
         System.out.println("Sqoop exports to table:" +tableName+" of database " + nameDB+ "from path directory: "+ exportFromPath );
 
@@ -56,18 +76,12 @@ public class SqoopDataLoader {
     }
 
 
-    public void printProcessErrorStream(Process process){
+    public void printProcessErrorStream(Process process, String jobIdentifer){
         String line;
-        try
-        {
+        try {
             BufferedReader input = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            while((line = input.readLine()) != null)
-            {
-                if(process.exitValue() == 0) {
-                    assets.getProsLogger().debug(line);
-                }else{
-                    assets.getProsLogger().error(line);
-                }
+            while((line = input.readLine()) != null){
+                Log.write(jobIdentifer, line, Log.Level.DEBUG);
             }
             input.close();
         }

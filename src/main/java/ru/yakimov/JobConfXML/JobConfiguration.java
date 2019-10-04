@@ -1,17 +1,19 @@
 package ru.yakimov.JobConfXML;
 
 import org.apache.hadoop.fs.Path;
+import ru.yakimov.AppConfXML.MySqlConfigMapHaver;
+import ru.yakimov.Assets;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class JobConfiguration {
+public class JobConfiguration implements MySqlConfigMapHaver {
 
     private String jobClassName;
 
-    private String JobName;
+    private String jobIdentifier;
 
     private Path hdfsDirTo;
 
@@ -41,12 +43,13 @@ public class JobConfiguration {
         this.partitionCols.add(partitionCol);
     }
 
+    @Override
     public void setMysqlConf(String target, MysqlConfiguration mysqlConf) {
         this.mysqlConfMap.put(target,mysqlConf);
     }
 
-    public void setJobName(String jobName) {
-        JobName = jobName;
+    public void setJobIdentifier(String jobIdentifier) {
+        this.jobIdentifier = jobIdentifier;
     }
 
     public String getJobClassName() {
@@ -60,8 +63,8 @@ public class JobConfiguration {
         return hdfsDirTo;
     }
 
-    public String getJobName() {
-        return JobName;
+    public String getJobIdentifier() {
+        return jobIdentifier;
     }
 
     public void setJobFile(String jobFile) {
@@ -76,6 +79,13 @@ public class JobConfiguration {
         return mysqlConfMap.get(target);
     }
 
+    private String getTmpDir() throws Exception {
+        StringBuilder sb = new StringBuilder(Assets.getInstance().getConf().getTmpDir().toString());
+        sb.append(Assets.SEPARATOR);
+        sb.append(jobIdentifier);
+        return sb.toString();
+    }
+
     @Override
     public String toString() {
         return "JobConfiguration{" +
@@ -85,4 +95,5 @@ public class JobConfiguration {
                 ", mysqlConfMap=" + mysqlConfMap.toString() +
                 '}';
     }
+
 }

@@ -1,5 +1,8 @@
 package ru.yakimov.JobConfXML;
 
+import ru.yakimov.AppConfXML.AppConfXmlLoader;
+import ru.yakimov.Assets;
+
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -10,6 +13,7 @@ import javax.xml.stream.events.XMLEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 
 public class JobConfXmlLoader {
@@ -21,16 +25,15 @@ public class JobConfXmlLoader {
     private static final String MYSQL_CONF = "mysqlConf";
 
 
-    private static final String CONF_TARGET = "confTarget";
-    private static final String HOST = "host";
-    private static final String PORT = "port";
-    private static final String USER = "user";
-    private static final String PASSWORD = "password";
-    private static final String SCHEMA = "schema";
-    private static final String TABLE = "table";
-    private static final String PRIMARY_KEY = "primaryKey";
+//    private static final String CONF_TARGET = "confTarget";
+//    private static final String HOST = "host";
+//    private static final String PORT = "port";
+//    private static final String USER = "user";
+//    private static final String PASSWORD = "password";
+//    private static final String SCHEMA = "schema";
+//    private static final String TABLE = "table";
+//    private static final String PRIMARY_KEY = "primaryKey";
 
-    private static final String SEPARATOR = "/";
 
 
 
@@ -49,7 +52,7 @@ public class JobConfXmlLoader {
                     if (startElementConf.getName().getLocalPart().equals(CONFIGURATION)) {
                         config = new JobConfiguration();
                         config.setJobFile(configFile);
-                        config.setJobName(createJobNameFronPath(configFile));
+                        config.setJobIdentifier(createJobNameFronPath(configFile)+"_"+getFullTime());
                         Iterator<Attribute> attributes = startElementConf.getAttributes();
                         while (attributes.hasNext()) {
                             Attribute attribute = attributes.next();
@@ -88,39 +91,7 @@ public class JobConfXmlLoader {
                     }
                     if (event.isStartElement()) {
                         if (startElementConf.getName().getLocalPart().equals(MYSQL_CONF)) {
-                            MysqlConfiguration mysqlConf = new MysqlConfiguration();
-                            String target = null;
-                            Iterator<Attribute> attributes = startElementConf.getAttributes();
-                            while (attributes.hasNext()) {
-                                Attribute attribute = attributes.next();
-                                if (attribute.getName().toString().equals(CONF_TARGET)) {
-                                    target = attribute.getValue();
-                                }
-                                if (attribute.getName().toString().equals(HOST)) {
-                                    mysqlConf.setHost(attribute.getValue());
-                                }
-                                if (attribute.getName().toString().equals(PORT)) {
-                                    mysqlConf.setPort(attribute.getValue());
-                                }
-                                if (attribute.getName().toString().equals(USER)) {
-                                    mysqlConf.setUser(attribute.getValue());
-                                }
-                                if (attribute.getName().toString().equals(PASSWORD)) {
-                                    mysqlConf.setPassword(attribute.getValue());
-                                }
-                                if (attribute.getName().toString().equals(SCHEMA)) {
-                                    mysqlConf.setSchema(attribute.getValue());
-                                }
-                                if (attribute.getName().toString().equals(TABLE)) {
-                                    mysqlConf.setTable(attribute.getValue());
-                                }
-                                if (attribute.getName().toString().equals(PRIMARY_KEY)) {
-                                    mysqlConf.setPrimaryKey(attribute.getValue());
-                                }
-                            }
-                            if (target != null && config != null) {
-                                config.setMysqlConf(target, mysqlConf);
-                            }
+                            AppConfXmlLoader.addMysqlConfig(config, startElementConf);
                         }
                     }
 
@@ -143,8 +114,13 @@ public class JobConfXmlLoader {
         return resConfig;
     }
 
+    private static String getFullTime(){
+
+        return LocalDateTime.now().toString();
+    }
+
     private static String createJobNameFronPath(String path){
-        String[] words = path.split(SEPARATOR);
-        return words[words.length-1].split(".")[0];
+        String[] words = path.split(Assets.SEPARATOR);
+        return words[words.length-1].split("\\.",2)[0];
     }
 }

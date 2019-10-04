@@ -4,8 +4,8 @@
         <mysqlConf confTarget="loadDataFrom" host="localhost" port="3306" user="vladimir" password="bhbyf.hnftdf"
                    schema="usersDB" table="users" primaryKey="userId"/>
 <!--            <confTarget>myTarget</confTarget>-->
-<!--            <host>localhost</host>-->
-<!--            <port>3306</port>-->
+<!--            <hdfsHost>localhost</hdfsHost>-->
+<!--            <hdfsPort>3306</hdfsPort>-->
 <!--            <user>vladimir</user>-->
 <!--            <password>bhbyf.hnftdf</password>-->
 <!--            <schema>usersDB</schema>-->

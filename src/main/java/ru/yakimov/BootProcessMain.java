@@ -1,7 +1,7 @@
 package ru.yakimov;
 
 import ru.yakimov.Jobs.Job;
-import ru.yakimov.Jobs.JobRunnable;
+import ru.yakimov.db.Log;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -10,8 +10,18 @@ import java.util.concurrent.TimeUnit;
 
 public class BootProcessMain {
 
-    public static void main(String[] args) {
-        ArrayList<Job> jobs = Assets.getInstance().getJobList();
+    public BootProcessMain() {
+        ArrayList<Job> jobs = null;
+        try {
+            jobs = Assets.getInstance().getJobList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if(jobs == null){
+            System.out.println("Jobs not found");
+            return;
+        }
 
         ExecutorService service = Executors.newCachedThreadPool();
 
@@ -29,10 +39,16 @@ public class BootProcessMain {
         jobs.forEach(BootProcessMain:: printResults);
 
         System.out.println("BootProsesMain has finished.");
+
+        try {
+            Assets.getInstance().closeResources();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static void printResults(Job job){
-        StringBuilder str = new StringBuilder(job.getJobConfig().getJobFile());
+        StringBuilder str = new StringBuilder(job.getJobConfig().getJobIdentifier());
         switch (job.getJobResult()){
             case 0:
                 str.append(" completed successfully.");
@@ -43,6 +59,10 @@ public class BootProcessMain {
         }
 
         System.out.println(str.toString());
+    }
+
+    public static void main(String[] args) {
+        new BootProcessMain();
     }
 
 

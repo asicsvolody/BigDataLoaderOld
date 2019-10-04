@@ -1,4 +1,6 @@
-package ru.yakimov.HDFSConfXML;
+package ru.yakimov.AppConfXML;
+
+import ru.yakimov.JobConfXML.MysqlConfiguration;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -12,12 +14,21 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Iterator;
 
-public class HDFSConfXmlLoader {
+public class AppConfXmlLoader {
     private static final String CONFIGURATION = "configuration";
     private static final String HOST = "host";
     private static final String PORT = "port";
     private static final String TEMP_DIR = "tempDir";
     private static final String JOBS_DIR = "jobsDir";
+
+    private static final String MYSQL_CONF = "mysqlConf";
+    private static final String CONF_TARGET = "confTarget";
+    private static final String USER = "user";
+    private static final String PASSWORD = "password";
+    private static final String SCHEMA = "schema";
+    private static final String TABLE = "table";
+    private static final String PRIMARY_KEY = "primaryKey";
+
 
 
 
@@ -25,33 +36,33 @@ public class HDFSConfXmlLoader {
 
 
     @SuppressWarnings({"unchecked", "null", "ConstantConditions"})
-    public static HDFSConfiguration readConfig (String configFile) {
-        HDFSConfiguration resConfig = null;
+    public static AppConfiguration readConfig (String configFile) {
+        AppConfiguration resConfig = null;
         try {
 
             XMLInputFactory inputFactory = XMLInputFactory.newInstance();
             InputStream in = new FileInputStream(configFile);
             XMLEventReader eventReader = inputFactory.createXMLEventReader(in);
-            HDFSConfiguration config = null;
+            AppConfiguration config = null;
 
             while (eventReader.hasNext()) {
                 XMLEvent event = eventReader.nextEvent();
                 if (event.isStartElement()) {
                     StartElement startElementConf = event.asStartElement();
                     if (startElementConf.getName().getLocalPart().equals(CONFIGURATION)) {
-                        config = new HDFSConfiguration();
+                        config = new AppConfiguration();
                         Iterator<Attribute> attributes = startElementConf.getAttributes();
                         while (attributes.hasNext()) {
                             Attribute attribute = attributes.next();
 
                             if (attribute.getName().toString().equals(HOST)) {
-                                config.setHost(attribute.getValue());
+                                config.setHdfsHost(attribute.getValue());
                             }
                             if (attribute.getName().toString().equals(PORT)) {
-                                config.setPort(attribute.getValue());
+                                config.setHdfsPort(attribute.getValue());
                             }
                             if (attribute.getName().toString().equals(TEMP_DIR)) {
-                                config.setTempDir(attribute.getValue());
+                                config.setTmpDir(attribute.getValue());
                             }
                             if (attribute.getName().toString().equals(JOBS_DIR)) {
                                 config.setJobsDir(attribute.getValue());
@@ -61,21 +72,21 @@ public class HDFSConfXmlLoader {
                     if (event.isStartElement()) {
                         if (event.asStartElement().getName().getLocalPart().equals(HOST)) {
                             event = eventReader.nextEvent();
-                            config.setHost(event.asCharacters().getData());
+                            config.setHdfsHost(event.asCharacters().getData());
                             continue;
                         }
                     }
                     if (event.isStartElement()) {
                         if (event.asStartElement().getName().getLocalPart().equals(PORT)) {
                             event = eventReader.nextEvent();
-                            config.setPort(event.asCharacters().getData());
+                            config.setHdfsPort(event.asCharacters().getData());
                             continue;
                         }
                     }
                     if (event.isStartElement()) {
                         if (event.asStartElement().getName().getLocalPart().equals(TEMP_DIR)) {
                             event = eventReader.nextEvent();
-                            config.setTempDir(event.asCharacters().getData());
+                            config.setTmpDir(event.asCharacters().getData());
                             continue;
                         }
                     }
@@ -86,6 +97,13 @@ public class HDFSConfXmlLoader {
                             continue;
                         }
                     }
+                    if (event.isStartElement()) {
+                        if (startElementConf.getName().getLocalPart().equals(MYSQL_CONF)) {
+                            addMysqlConfig(config, startElementConf);
+                        }
+                    }
+
+
 
                 }
                 if(event.isEndElement()){
@@ -106,10 +124,46 @@ public class HDFSConfXmlLoader {
         return resConfig;
     }
 
-//    public static void main(String[] args) {
-//        System.out.println(new HDFSConfXmlLoader().readConfig("conf.xml").toString());
-//
-//    }
+    public static void addMysqlConfig(MySqlConfigMapHaver config, StartElement startElementConf) {
+        MysqlConfiguration mysqlConf = new MysqlConfiguration();
+        String target = null;
+        Iterator<Attribute> attributes = startElementConf.getAttributes();
+        while (attributes.hasNext()) {
+            Attribute attribute = attributes.next();
+            if (attribute.getName().toString().equals(CONF_TARGET)) {
+                target = attribute.getValue();
+            }
+            if (attribute.getName().toString().equals(HOST)) {
+                mysqlConf.setHost(attribute.getValue());
+            }
+            if (attribute.getName().toString().equals(PORT)) {
+                mysqlConf.setPort(attribute.getValue());
+            }
+            if (attribute.getName().toString().equals(USER)) {
+                mysqlConf.setUser(attribute.getValue());
+            }
+            if (attribute.getName().toString().equals(PASSWORD)) {
+                mysqlConf.setPassword(attribute.getValue());
+            }
+            if (attribute.getName().toString().equals(SCHEMA)) {
+                mysqlConf.setSchema(attribute.getValue());
+            }
+            if (attribute.getName().toString().equals(TABLE)) {
+                mysqlConf.setTable(attribute.getValue());
+            }
+            if (attribute.getName().toString().equals(PRIMARY_KEY)) {
+                mysqlConf.setPrimaryKey(attribute.getValue());
+            }
+        }
+        if (target != null && config != null) {
+            config.setMysqlConf(target, mysqlConf);
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new AppConfXmlLoader().readConfig("conf.xml").toString());
+
+    }
 
 
 }
