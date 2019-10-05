@@ -1,7 +1,7 @@
 <!--?xml version="1.0" encoding="UTF-8"?-->
 <config>
     <configuration jobClassName="ru.yakimov.Jobs.LoadMysqlToAvroJob" hgfsDirTo="/data2" partition="age">
-        <mysqlConf confTarget="loadDataFrom" host="localhost" port="3306" user="vladimir" password="bhbyf.hnftdf"
-                   schema="usersDB" table="users" primaryKey="userId"/>
+        <mysqlConf confTarget="IMPORT_MYSQL" host="localhost" port="3306" user="vladimir" password="bhbyf.hnftdf"
+                   schema="usersDB" table="users" primaryKey="user_id"/>
     </configuration>
 </config>

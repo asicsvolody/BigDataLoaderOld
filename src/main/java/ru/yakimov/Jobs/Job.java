@@ -1,6 +1,6 @@
 package ru.yakimov.Jobs;
 
-import ru.yakimov.JobConfXML.JobConfiguration;
+import ru.yakimov.config.JobConfiguration;
 
 
 public abstract class Job extends Thread {

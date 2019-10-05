@@ -13,7 +13,7 @@ public class LoadMysqlToAvroJob extends Job {
         int interimRes = 0;
 
         try {
-            interimRes+= new SqoopDataLoader().importToHdfsInAvroFiles(getJobConfig(), "loadDataFrom");
+            interimRes+= new SqoopDataLoader().importToHdfsInAvroFiles(getJobConfig(), "IMPORT_MYSQL");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

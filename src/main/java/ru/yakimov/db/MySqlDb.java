@@ -5,7 +5,7 @@
  */
 package ru.yakimov.db;
 
-import ru.yakimov.JobConfXML.MysqlConfiguration;
+import ru.yakimov.config.MysqlConfiguration;
 
 import java.sql.*;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package ru.yakimov.JobConfXML;
+package ru.yakimov.config;
 
 import java.util.ArrayList;
 import java.util.Iterator;

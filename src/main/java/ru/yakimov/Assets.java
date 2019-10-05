@@ -4,11 +4,11 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.spark.SparkConf;
 import org.apache.spark.SparkContext;
 import org.apache.spark.sql.SparkSession;
-import ru.yakimov.AppConfXML.AppConfiguration;
-import ru.yakimov.AppConfXML.AppConfXmlLoader;
-import ru.yakimov.JobConfXML.JobsReader;
+import ru.yakimov.config.AppConfiguration;
+import ru.yakimov.utils.JobsReader;
 import ru.yakimov.Jobs.Job;
 import ru.yakimov.db.MySqlDb;
+import ru.yakimov.config.ConfigXmlLoader;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -61,7 +61,7 @@ public class Assets {
     private Assets() throws Exception {
 
 
-        this.conf = AppConfXmlLoader.readConfig(CONF_FILE_PATH);
+        this.conf = ConfigXmlLoader.readConfigApp(CONF_FILE_PATH);
 
 
         try {

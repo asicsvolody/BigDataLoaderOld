@@ -1,9 +1,11 @@
-package ru.yakimov.JobConfXML;
+package ru.yakimov.utils;
 
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.yakimov.Jobs.Job;
+import ru.yakimov.config.JobConfiguration;
+import ru.yakimov.config.ConfigXmlLoader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ public class JobsReader {
 
         for (String file : jobFiles) {
             if(file.endsWith(".jxml")){
-                jobConfigs.add(JobConfXmlLoader.readConf(jobsDir+"/"+file));
+                jobConfigs.add(ConfigXmlLoader.readConfJob(jobsDir+"/"+file));
             }
         }
 

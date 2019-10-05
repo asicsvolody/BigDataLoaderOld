@@ -1,8 +1,9 @@
 package ru.yakimov;
 
 import ru.yakimov.Jobs.Job;
-import ru.yakimov.db.Log;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

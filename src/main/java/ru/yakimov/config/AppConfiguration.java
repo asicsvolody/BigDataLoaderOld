@@ -1,8 +1,7 @@
-package ru.yakimov.AppConfXML;
+package ru.yakimov.config;
 
 
 import org.apache.hadoop.fs.Path;
-import ru.yakimov.JobConfXML.MysqlConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;

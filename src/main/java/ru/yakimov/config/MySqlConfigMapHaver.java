@@ -1,6 +1,4 @@
-package ru.yakimov.AppConfXML;
-
-import ru.yakimov.JobConfXML.MysqlConfiguration;
+package ru.yakimov.config;
 
 public interface MySqlConfigMapHaver {
 
