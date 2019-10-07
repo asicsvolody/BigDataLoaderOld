@@ -1,11 +1,13 @@
-package ru.yakimov.config;
+/**
+ * Created by IntelliJ Idea.
+ * User: Якимов В.Н.
+ * E-mail: yakimovvn@bk.ru
+ */
 
-import org.apache.hadoop.fs.Path;
-import ru.yakimov.Assets;
+package ru.yakimov.config;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class JobConfiguration implements MySqlConfigMapHaver {
@@ -14,7 +16,9 @@ public class JobConfiguration implements MySqlConfigMapHaver {
 
     private String jobIdentifier;
 
-    private Path hdfsDirTo;
+    private String jobTmpDir;
+
+    private String jobDirTo;
 
     private ArrayList<String> partitionCols;
 
@@ -34,8 +38,8 @@ public class JobConfiguration implements MySqlConfigMapHaver {
         this.jobClassName = jobClassName;
     }
 
-    public void setHdfsDirTo(String hdfsDirTo) {
-        this.hdfsDirTo = new Path(hdfsDirTo);
+    public void setJobDirTo(String jobDirTo) {
+        this.jobDirTo = jobDirTo;
     }
 
     public void setPartition(String partitionCol) {
@@ -51,15 +55,20 @@ public class JobConfiguration implements MySqlConfigMapHaver {
         this.jobIdentifier = jobIdentifier;
     }
 
+    public void setJobTmpDir(String jobTmpDir) {
+        this.jobTmpDir = jobTmpDir;
+    }
+
     public String getJobClassName() {
         return jobClassName;
     }
+
     public String getJobFile() {
         return jobFile;
     }
 
-    public Path getHdfsDirTo() {
-        return hdfsDirTo;
+    public String getJobDirTo() {
+        return jobDirTo;
     }
 
     public String getJobIdentifier() {
@@ -70,26 +79,23 @@ public class JobConfiguration implements MySqlConfigMapHaver {
         this.jobFile = jobFile;
     }
 
-    public Iterator<String> getPartitionCols() {
-        return partitionCols.iterator();
+    public String[] getPartitionCols() {
+        return partitionCols.toArray(new String[0]);
     }
 
     public MysqlConfiguration getMysqlConf(String target) {
         return mysqlConfMap.get(target);
     }
 
-    private String getTmpDir() throws Exception {
-        StringBuilder sb = new StringBuilder(Assets.getInstance().getConf().getTmpDir().toString());
-        sb.append(Assets.SEPARATOR);
-        sb.append(jobIdentifier);
-        return sb.toString();
+    public String getJobTmpDir() {
+        return jobTmpDir;
     }
 
     @Override
     public String toString() {
         return "JobConfiguration{" +
                 "jobClassName='" + jobClassName + '\'' +
-                ", hdfsDirTo=" + hdfsDirTo.toString() +
+                ", jobDirTo=" + jobDirTo.toString() +
                 ", partitionCols=" + partitionCols.toString() +
                 ", mysqlConfMap=" + mysqlConfMap.toString() +
                 '}';

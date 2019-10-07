@@ -1,4 +1,7 @@
 /**
+ * Created by IntelliJ Idea.
+ * User: Якимов В.Н.
+ * E-mail: yakimovvn@bk.ru
  * Отображение таблицы Mysql SYSTEM_LOG и методы работы с ней
  * Таблица хранит логи работы системы
  */

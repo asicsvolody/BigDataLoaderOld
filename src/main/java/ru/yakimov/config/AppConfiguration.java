@@ -1,7 +1,10 @@
+/**
+ * Created by IntelliJ Idea.
+ * User: Якимов В.Н.
+ * E-mail: yakimovvn@bk.ru
+ */
+
 package ru.yakimov.config;
-
-
-import org.apache.hadoop.fs.Path;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +16,9 @@ public class AppConfiguration implements MySqlConfigMapHaver {
 
     private Map<String, MysqlConfiguration> mysqlConfigMap;
 
-    private Path tempDir;
-    private Path jobsDir;
+    private String tempDir;
+    private String jobsDir;
+    private String logsDir;
 
     public AppConfiguration() {
         this.mysqlConfigMap = new HashMap<>();
@@ -28,12 +32,16 @@ public class AppConfiguration implements MySqlConfigMapHaver {
         return hdfsPort;
     }
 
-    public Path getTmpDir() {
+    public String getTmpDir() {
         return tempDir;
     }
 
-    public Path getJobsDir() {
+    public String getJobsDir() {
         return jobsDir;
+    }
+
+    public String getLogsDir() {
+        return logsDir;
     }
 
     public MysqlConfiguration getMysqlConf(String target) {
@@ -49,11 +57,15 @@ public class AppConfiguration implements MySqlConfigMapHaver {
     }
 
     public void setTmpDir(String tempDir) {
-        this.tempDir = new Path(tempDir);
+        this.tempDir = tempDir;
     }
 
     public void setJobsDir(String jobsDir) {
-        this.jobsDir = new Path(jobsDir);
+        this.jobsDir = jobsDir;
+    }
+
+    public void setLogsDir(String logsDir) {
+        this.logsDir = logsDir;
     }
 
     @Override

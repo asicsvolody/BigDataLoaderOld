@@ -1,6 +1,13 @@
+/**
+ * Created by IntelliJ Idea.
+ * User: Якимов В.Н.
+ * E-mail: yakimovvn@bk.ru
+ */
+
 package ru.yakimov;
 
 import ru.yakimov.Jobs.Job;
+import ru.yakimov.db.LogsFileWriter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -41,6 +48,16 @@ public class BootProcessMain {
 
         System.out.println("BootProsesMain has finished.");
 
+        System.out.println("Write logs files");
+        for (Job job : jobs) {
+            try {
+                LogsFileWriter.write(job.getJobConfig().getJobIdentifier());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
         try {
             Assets.getInstance().closeResources();
         } catch (Exception e) {
@@ -65,8 +82,4 @@ public class BootProcessMain {
     public static void main(String[] args) {
         new BootProcessMain();
     }
-
-
-
-
 }

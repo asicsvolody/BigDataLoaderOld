@@ -1,3 +1,9 @@
+/**
+ * Created by IntelliJ Idea.
+ * User: Якимов В.Н.
+ * E-mail: yakimovvn@bk.ru
+ */
+
 package ru.yakimov.utils;
 
 
@@ -5,6 +11,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.yakimov.Jobs.Job;
 import ru.yakimov.config.JobConfiguration;
+
+
 import ru.yakimov.config.ConfigXmlLoader;
 
 import java.io.File;

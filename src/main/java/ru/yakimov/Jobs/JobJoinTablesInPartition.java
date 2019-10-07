@@ -4,10 +4,7 @@
  * E-mail: yakimovvn@bk.ru
  */
 
-
 package ru.yakimov.Jobs;
 
-public interface JobRunnable {
-
-    void runJob();
+public class JobJoinTablesInPartition {
 }

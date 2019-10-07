@@ -1,3 +1,9 @@
+/**
+ * Created by IntelliJ Idea.
+ * User: Якимов В.Н.
+ * E-mail: yakimovvn@bk.ru
+ */
+
 package ru.yakimov.config;
 
 import ru.yakimov.Assets;
@@ -20,13 +26,16 @@ public class ConfigXmlLoader {
     private static final String CONFIGURATION = "configuration";
 
     private static final String JOB_CLASS_NAME = "jobClassName";
-    private static final String HDFS_DIR_TO = "hgfsDirTo";
+    private static final String JOB_DIR_TO = "jobDirTo";
     private static final String PARTITION = "partition";
     private static final String MYSQL_CONF = "mysqlConf";
     private static final String HOST = "host";
     private static final String PORT = "port";
     private static final String TEMP_DIR = "tempDir";
     private static final String JOBS_DIR = "jobsDir";
+    private static final String LOGS_DIR = "logsDir";
+
+
 
     private static final String CONF_TARGET = "confTarget";
     private static final String USER = "user";
@@ -66,6 +75,9 @@ public class ConfigXmlLoader {
                             if (attribute.getName().toString().equals(JOBS_DIR)) {
                                 config.setJobsDir(attribute.getValue());
                             }
+                            if (attribute.getName().toString().equals(LOGS_DIR)) {
+                                config.setLogsDir(attribute.getValue());
+                            }
                         }
                     }
                     if (event.isStartElement()) {
@@ -93,6 +105,13 @@ public class ConfigXmlLoader {
                         if (event.asStartElement().getName().getLocalPart().equals(JOBS_DIR)) {
                             event = eventReader.nextEvent();
                             config.setJobsDir(event.asCharacters().getData());
+                            continue;
+                        }
+                    }
+                    if (event.isStartElement()) {
+                        if (event.asStartElement().getName().getLocalPart().equals(LOGS_DIR)) {
+                            event = eventReader.nextEvent();
+                            config.setLogsDir(event.asCharacters().getData());
                             continue;
                         }
                     }
@@ -139,6 +158,8 @@ public class ConfigXmlLoader {
                         config = new JobConfiguration();
                         config.setJobFile(configFile);
                         config.setJobIdentifier(createJobNameFromPath(configFile)+"_"+getFullTime());
+                        config.setJobTmpDir(Assets.getInstance().getConf().getTmpDir()
+                                + Assets.SEPARATOR+config.getJobIdentifier());
                         Iterator<Attribute> attributes = startElementConf.getAttributes();
                         while (attributes.hasNext()) {
                             Attribute attribute = attributes.next();
@@ -146,8 +167,8 @@ public class ConfigXmlLoader {
                             if (attribute.getName().toString().equals(JOB_CLASS_NAME)) {
                                 config.setJobClassName(attribute.getValue());
                             }
-                            if (attribute.getName().toString().equals(HDFS_DIR_TO)) {
-                                config.setHdfsDirTo(attribute.getValue());
+                            if (attribute.getName().toString().equals(JOB_DIR_TO)) {
+                                config.setJobDirTo(attribute.getValue());
                             }
                             if (attribute.getName().toString().equals(PARTITION)) {
                                 config.setPartition(attribute.getValue());
@@ -162,9 +183,9 @@ public class ConfigXmlLoader {
                         }
                     }
                     if (event.isStartElement()) {
-                        if (event.asStartElement().getName().getLocalPart().equals(HDFS_DIR_TO)) {
+                        if (event.asStartElement().getName().getLocalPart().equals(JOB_DIR_TO)) {
                             event = eventReader.nextEvent();
-                            config.setHdfsDirTo(event.asCharacters().getData());
+                            config.setJobDirTo(event.asCharacters().getData());
                             continue;
                         }
                     }
@@ -195,6 +216,8 @@ public class ConfigXmlLoader {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (XMLStreamException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return resConfig;

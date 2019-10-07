@@ -1,9 +1,15 @@
+/**
+ * Created by IntelliJ Idea.
+ * User: Якимов В.Н.
+ * E-mail: yakimovvn@bk.ru
+ */
+
 package ru.yakimov.Jobs;
 
 import ru.yakimov.config.JobConfiguration;
 
 
-public abstract class Job extends Thread {
+public abstract class Job implements Runnable {
 
     private final int defaultRes = -1;
 

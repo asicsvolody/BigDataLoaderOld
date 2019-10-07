@@ -1,3 +1,9 @@
+/**
+ * Created by IntelliJ Idea.
+ * User: Якимов В.Н.
+ * E-mail: yakimovvn@bk.ru
+ */
+
 package ru.yakimov;
 
 import org.apache.hadoop.fs.FileSystem;
@@ -16,16 +22,15 @@ import java.util.ArrayList;
 
 public class Assets {
 
-
-    private ArrayList<Job> jobList;
-
-
-    private AppConfiguration conf;
-
     public static final String SEPARATOR = "/";
+    public static final String IMPORT_MYSQL = "IMPORT_MYSQL";
+    public static final String EXPORT_MYSQL = "EXPORT_MYSQL";
 
     private final String CONF_FILE_PATH = "conf.xml";
 
+
+    private AppConfiguration conf;
+    private ArrayList<Job> jobList;
     private final Class CONTEXT_CLASS = JobContextConfiguration.class;
 
     private final SparkSession spark;
@@ -123,6 +128,6 @@ public class Assets {
             e.printStackTrace();
         }
         instance = null;
-
     }
+
 }

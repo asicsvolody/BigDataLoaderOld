@@ -1,4 +1,7 @@
 /**
+ * Created by IntelliJ Idea.
+ * User: Якимов В.Н.
+ * E-mail: yakimovvn@bk.ru
  * Класс для обслуживания подключения к БД Mysql
  * БД Mysql хранит информацию необходимссую для работы, логи
  * использует общее статическое подключение (singleton)
@@ -133,6 +136,7 @@ public class MySqlDb {
         ResultSet rs = stmt.executeQuery(sql);
         ArrayList<String> res = new ArrayList<String>();
         while (rs.next()) {
+
             res.add(rs.getString(1));
         }
         rs.close();
