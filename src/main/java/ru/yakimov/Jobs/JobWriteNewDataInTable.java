@@ -6,10 +6,11 @@
 
 package ru.yakimov.Jobs;
 
+
 import org.springframework.stereotype.Component;
 
 @Component
-public class JobJoinTablesInPartition extends Job{
+public class JobWriteNewDataInTable extends Job {
 
     @Override
     public void run() {

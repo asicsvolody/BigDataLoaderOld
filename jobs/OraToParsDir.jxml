@@ -1,8 +1,21 @@
 <!--?xml version="1.0" encoding="UTF-8"?-->
 <config>
-    <configuration jobClassName="ru.yakimov.Jobs.JobOraToPartitionDir" jobDirTo="/data" partition="user_age">
-        <mysqlConf confTarget="IMPORT_MYSQL" host="127.0.0.1" port="3306" user="vladimir" password="bhbyf.hnftdf"
-                   schema="usersDB" table="users" primaryKey="user_id"/>
-    </configuration>
+    <job>
+        <subJob jobClassName="ru.yakimov.Jobs.JobOraToPartitionDir" jobDirTo="/data" partition="user_age">
+
+             <mysqlConf confTarget="IMPORT_MYSQL" host="127.0.0.1" port="3306" user="vladimir" password="bhbyf.hnftdf"
+                       schema="usersDB" table="users" primaryKey="user_id"/>
+
+        </subJob>
+
+
+        </job>
+
+
+
+    <!--    <configuration jobClassName="ru.yakimov.Jobs.JobOraToPartitionDir" jobDirTo="/data" partition="user_age">-->
+<!--        <mysqlConf confTarget="IMPORT_MYSQL" host="127.0.0.1" port="3306" user="vladimir" password="bhbyf.hnftdf"-->
+<!--                   schema="usersDB" table="users" primaryKey="user_id"/>-->
+<!--    </configuration>-->
 
 </config>
