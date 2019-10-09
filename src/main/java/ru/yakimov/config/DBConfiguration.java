@@ -9,7 +9,7 @@ package ru.yakimov.config;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class MysqlConfiguration {
+public class DBConfiguration {
     private String host;
     private String port;
     private String user;
@@ -18,7 +18,7 @@ public class MysqlConfiguration {
     private String table;
     private ArrayList<String> primaryKeys;
 
-    public MysqlConfiguration() {
+    public DBConfiguration() {
         this.primaryKeys = new ArrayList<>();
     }
 
@@ -82,7 +82,7 @@ public class MysqlConfiguration {
 
     @Override
     public String toString() {
-        return "MysqlConfiguration{" +
+        return "DBConfiguration{" +
                 "host='" + host + '\'' +
                 ", port='" + port + '\'' +
                 ", user='" + user + '\'' +

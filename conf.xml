@@ -6,7 +6,7 @@
         <tempDir>/jobTmp</tempDir>
         <jobsDir>./jobs</jobsDir>
         <logsDir>./logs</logsDir>
-        <mysqlConf confTarget="LogDataBase" host="localhost" port="3306" user="vladimir" password="bhbyf.hnftdf"
+        <logDB host="localhost" port="3306" user="vladimir" password="bhbyf.hnftdf"
                    schema="LOGS_DB" table="SYSTEM_LOG" primaryKey="SYSTEM_LOG_ID"/>
     </configuration>
 </config>

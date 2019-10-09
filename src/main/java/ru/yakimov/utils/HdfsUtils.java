@@ -9,7 +9,6 @@ package ru.yakimov.utils;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import ru.yakimov.Assets;
-import ru.yakimov.config.JobConfiguration;
 import ru.yakimov.db.Log;
 
 public class HdfsUtils {

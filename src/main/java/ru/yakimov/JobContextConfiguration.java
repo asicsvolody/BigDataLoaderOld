@@ -9,35 +9,25 @@ package ru.yakimov;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-import ru.yakimov.Jobs.JobJoinTablesInPartition;
-import ru.yakimov.Jobs.JobOraToPartitionDir;
-import ru.yakimov.Jobs.JobUpdatePartitionData;
-import ru.yakimov.Jobs.JobWriteNewDataInTable;
+import ru.yakimov.Jobs.ImportSqoopDbToDirJob;
+import ru.yakimov.Jobs.SparkPartitionTableJob;
 
 @Configuration
 public class JobContextConfiguration {
 
     @Bean
     @Scope("prototype")
-    public JobOraToPartitionDir loadJobOraToPartitionDir(){
-        return new JobOraToPartitionDir();
+    public SparkPartitionTableJob loadSparkPartitionTableJob(){
+        return new SparkPartitionTableJob();
     }
 
     @Bean
     @Scope("prototype")
-    public JobJoinTablesInPartition loadJobJoinTablesInPartition(){
-        return new JobJoinTablesInPartition();
+    public ImportSqoopDbToDirJob loadImportSqoopDbToDirJob(){
+        return new ImportSqoopDbToDirJob();
     }
 
-    @Bean
-    @Scope("prototype")
-    public JobUpdatePartitionData loadJobUpdataPartitionData(){
-        return new JobUpdatePartitionData();
-    }
 
-    @Bean
-    @Scope("prototype")
-    public JobWriteNewDataInTable loadJobWriteNewDataInTable(){
-        return new JobWriteNewDataInTable();
-    }
+
+
 }

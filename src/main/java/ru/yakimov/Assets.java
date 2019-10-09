@@ -11,27 +11,21 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.SparkContext;
 import org.apache.spark.sql.SparkSession;
 import ru.yakimov.config.AppConfiguration;
-import ru.yakimov.utils.JobsReader;
-import ru.yakimov.Jobs.Job;
+
+import ru.yakimov.config.AppXmlLoader;
 import ru.yakimov.db.MySqlDb;
-import ru.yakimov.config.ConfigXmlLoader;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
+
 
 public class Assets {
 
     public static final String SEPARATOR = "/";
-    public static final String IMPORT_MYSQL = "IMPORT_MYSQL";
-    public static final String EXPORT_MYSQL = "EXPORT_MYSQL";
 
     private final String CONF_FILE_PATH = "conf.xml";
 
 
     private AppConfiguration conf;
-    private ArrayList<Job> jobList;
-    private final Class CONTEXT_CLASS = JobContextConfiguration.class;
 
     private final SparkSession spark;
 
@@ -56,23 +50,18 @@ public class Assets {
         return  localInstance;
     }
 
-    public ArrayList<Job> getJobList() {
-        if(jobList == null){
-            jobList = new JobsReader(CONTEXT_CLASS).getJobs(conf.getJobsDir().toString());
-        }
-        return jobList;
-    }
 
     private Assets() throws Exception {
 
 
-        this.conf = ConfigXmlLoader.readConfigApp(CONF_FILE_PATH);
+        this.conf = AppXmlLoader.readConfigApp(CONF_FILE_PATH);
 
 
         try {
-            MySqlDb.initConnection(conf.getMysqlConf("LogDataBase"));
+            MySqlDb.initConnection(conf.getLogDbConfig());
         } catch (Exception e) {
-            throw new Exception("Exception connection to LogDataBase");
+            e.printStackTrace();
+            throw new Exception("Exception connection to log databese");
         }
 
 
@@ -114,19 +103,10 @@ public class Assets {
         return rt;
     }
 
-    public void closeResources(){
-        try {
-            MySqlDb.closeConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        rt.exit(0);
-        spark.close();
-        try {
-            fs.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static void closeResources(){
+
+        MySqlDb.closeConnection();
+
         instance = null;
     }
 

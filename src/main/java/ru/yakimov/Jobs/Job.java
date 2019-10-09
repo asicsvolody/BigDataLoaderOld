@@ -6,28 +6,19 @@
 
 package ru.yakimov.Jobs;
 
+import org.springframework.stereotype.Component;
 import ru.yakimov.config.JobConfiguration;
+import ru.yakimov.config.RootJobConfiguration;
 
+import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
-public abstract class Job implements Runnable {
+public abstract class Job implements Callable<Integer> {
 
-    private final int defaultRes = -1;
+    JobConfiguration jobConfigs;
 
-    private JobConfiguration jobConfig;
-    private int jobResult = defaultRes;
-
-    public JobConfiguration getJobConfig() {
-        return jobConfig;
-    }
-    public void setJobConfig(JobConfiguration jobConfig) {
-        this.jobConfig = jobConfig;
-    }
-
-    public void setJobResult(int jobResult) {
-        this.jobResult = jobResult;
-    }
-
-    public int getJobResult() {
-        return jobResult;
+    public void setJobConfigs(JobConfiguration jobConfigs) {
+        this.jobConfigs = jobConfigs;
     }
 }
+

@@ -7,98 +7,82 @@
 package ru.yakimov.config;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-public class JobConfiguration implements MySqlConfigMapHaver {
+public class JobConfiguration{
 
-    private String jobClassName;
+    private String rootJobName;
+    private String jobName;
+    private String jobClass;
+    private int stage;
+    private String dirFrom;
+    private String dirTo;
+    private ArrayList<String> partitions;
+    private DBConfiguration dbConfiguration;
 
-    private String jobIdentifier;
-
-    private String jobTmpDir;
-
-    private String jobDirTo;
-
-    private ArrayList<String> partitionCols;
-
-
-
-    private String jobFile;
-
-
-    private Map <String , MysqlConfiguration> mysqlConfMap;
-
-    public JobConfiguration() {
-        this.partitionCols = new ArrayList<>();
-        this.mysqlConfMap = new HashMap<>();
+    public JobConfiguration(String rootJobName) {
+        this.rootJobName = rootJobName;
     }
 
-    public void setJobClassName(String jobClassName) {
-        this.jobClassName = jobClassName;
+    public String getRootJobName() {
+        return rootJobName;
     }
 
-    public void setJobDirTo(String jobDirTo) {
-        this.jobDirTo = jobDirTo;
+    public String getJobName() {
+        return jobName;
     }
 
-    public void setPartition(String partitionCol) {
-        this.partitionCols.add(partitionCol);
+    public String getJobClass() {
+        return jobClass;
     }
 
-    @Override
-    public void setMysqlConf(String target, MysqlConfiguration mysqlConf) {
-        this.mysqlConfMap.put(target,mysqlConf);
+    public int getStage() {
+        return stage;
     }
 
-    public void setJobIdentifier(String jobIdentifier) {
-        this.jobIdentifier = jobIdentifier;
+    public String getDirFrom() {
+        return dirFrom;
     }
 
-    public void setJobTmpDir(String jobTmpDir) {
-        this.jobTmpDir = jobTmpDir;
+    public String getDirTo() {
+        return dirTo;
     }
 
-    public String getJobClassName() {
-        return jobClassName;
+    public String[] getPartitions() {
+        return partitions.toArray(new String[0]);
     }
 
-    public String getJobFile() {
-        return jobFile;
+    public DBConfiguration getDbConfiguration() {
+        return dbConfiguration;
     }
 
-    public String getJobDirTo() {
-        return jobDirTo;
+    public void setJobName(String jobName) {
+        this.jobName = jobName;
     }
 
-    public String getJobIdentifier() {
-        return jobIdentifier;
+    public void setJobClass(String jobClass) {
+        this.jobClass = jobClass;
     }
 
-    public void setJobFile(String jobFile) {
-        this.jobFile = jobFile;
+    public void setStage(int stage) {
+        this.stage = stage;
     }
 
-    public String[] getPartitionCols() {
-        return partitionCols.toArray(new String[0]);
+    public void setDirFrom(String dirFrom) {
+        this.dirFrom = dirFrom;
     }
 
-    public MysqlConfiguration getMysqlConf(String target) {
-        return mysqlConfMap.get(target);
+    public void setDirTo(String dirTo) {
+        this.dirTo = dirTo;
     }
 
-    public String getJobTmpDir() {
-        return jobTmpDir;
+    public void addPartitions(String partition) {
+        if(partitions == null)
+            partitions = new ArrayList<>();
+        this.partitions.add(partition);
     }
 
-    @Override
-    public String toString() {
-        return "JobConfiguration{" +
-                "jobClassName='" + jobClassName + '\'' +
-                ", jobDirTo=" + jobDirTo.toString() +
-                ", partitionCols=" + partitionCols.toString() +
-                ", mysqlConfMap=" + mysqlConfMap.toString() +
-                '}';
+    public void setDbConfiguration(DBConfiguration dbConfiguration) {
+        this.dbConfiguration = dbConfiguration;
     }
 
 }

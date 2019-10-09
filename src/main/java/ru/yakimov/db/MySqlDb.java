@@ -8,14 +8,14 @@
  */
 package ru.yakimov.db;
 
-import ru.yakimov.config.MysqlConfiguration;
+import ru.yakimov.config.DBConfiguration;
 
 import java.sql.*;
 import java.util.ArrayList;
 
 public class MySqlDb {
 
-    private MysqlConfiguration config;
+    private DBConfiguration config;
 
     public static String dbUrl;
 
@@ -153,7 +153,7 @@ public class MySqlDb {
      * @return
      * @throws Exception
      */
-    public static Connection initConnection(MysqlConfiguration config) throws Exception {
+    public static Connection initConnection(DBConfiguration config) throws Exception {
         return initConnection(config, false);
     }
 
@@ -166,7 +166,7 @@ public class MySqlDb {
      * @return
      * @throws Exception
      */
-    public static Connection initConnection(MysqlConfiguration config, Boolean debug) throws Exception {
+    public static Connection initConnection(DBConfiguration config, Boolean debug) throws Exception {
         dbUrl = String.format("jdbc:mysql://%s:%s/%s?serverTimezone=UTC&zeroDateTimeBehavior=CONVERT_TO_NULL",config.getHost(),config.getPort(),config.getSchema());
         dbUser = config.getUser();
         dbPass = config.getPassword();
@@ -184,12 +184,16 @@ public class MySqlDb {
      *
      * @throws SQLException
      */
-    public static void closeConnection() throws SQLException {
+    public static void closeConnection() {
         if (conn == null) {
             return;
         }
-        conn.commit();
-        conn.close();
+        try {
+            conn.commit();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 

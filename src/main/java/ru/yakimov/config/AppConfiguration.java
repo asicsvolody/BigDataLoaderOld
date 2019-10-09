@@ -6,23 +6,17 @@
 
 package ru.yakimov.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class AppConfiguration implements MySqlConfigMapHaver {
+public class AppConfiguration {
 
     private String hdfsHost;
     private String hdfsPort;
 
-    private Map<String, MysqlConfiguration> mysqlConfigMap;
+    private DBConfiguration logDbConfig;
 
     private String tempDir;
     private String jobsDir;
     private String logsDir;
 
-    public AppConfiguration() {
-        this.mysqlConfigMap = new HashMap<>();
-    }
 
     public String getHdfsHost() {
         return hdfsHost;
@@ -44,8 +38,8 @@ public class AppConfiguration implements MySqlConfigMapHaver {
         return logsDir;
     }
 
-    public MysqlConfiguration getMysqlConf(String target) {
-        return mysqlConfigMap.get(target);
+    public DBConfiguration getLogDbConfig() {
+        return logDbConfig;
     }
 
     public void setHdfsHost(String hdfsHost) {
@@ -68,19 +62,9 @@ public class AppConfiguration implements MySqlConfigMapHaver {
         this.logsDir = logsDir;
     }
 
-    @Override
-    public void setMysqlConf(String target, MysqlConfiguration mysqlConfig) {
-        this.mysqlConfigMap.put(target, mysqlConfig);
+    public void setLogDbConfig(DBConfiguration logDbConfig) {
+        this.logDbConfig = logDbConfig;
     }
 
-    @Override
-    public String toString() {
-        return "AppConfiguration{" +
-                "hdfsHost='" + hdfsHost + '\'' +
-                ", hdfsPort='" + hdfsPort + '\'' +
-                ", mysqlConfigMap=" + mysqlConfigMap.toString() +
-                ", tempDir=" + tempDir.toString() +
-                ", jobsDir=" + jobsDir.toString() +
-                '}';
-    }
+
 }

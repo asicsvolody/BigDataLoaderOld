@@ -6,68 +6,70 @@
 
 package ru.yakimov;
 
-import ru.yakimov.Jobs.Job;
+import ru.yakimov.Jobs.RootJob;
+import ru.yakimov.Jobs.SubJob;
 import ru.yakimov.db.LogsFileWriter;
+import ru.yakimov.db.MySqlDb;
+import ru.yakimov.utils.RootJobsCreator;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.*;
 
 public class BootProcessMain {
 
     public BootProcessMain() {
-        ArrayList<Job> jobs = null;
         try {
-            jobs = Assets.getInstance().getJobList();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        if(jobs == null){
-            System.out.println("Jobs not found");
-            return;
-        }
-
-        ExecutorService service = Executors.newCachedThreadPool();
-
-        jobs.forEach(service::submit);
-
-        service.shutdown();
-
-        try {
-            service.awaitTermination(10, TimeUnit.HOURS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+            RootJob[] rootJobs = RootJobsCreator.getRootJobsFromDir(Assets.getInstance().getConf().getJobsDir());
 
 
-        jobs.forEach(BootProcessMain:: printResults);
-
-        System.out.println("BootProsesMain has finished.");
-
-        System.out.println("Write logs files");
-        for (Job job : jobs) {
-            try {
-                LogsFileWriter.write(job.getJobConfig().getJobIdentifier());
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (rootJobs == null) {
+                System.out.println("Jobs not found");
+                return;
             }
-        }
+
+            ExecutorService service = Executors.newCachedThreadPool();
+
+            Map<String, Future<Integer>> futureMap = new HashMap<>();
+
+            for (RootJob rootJob : rootJobs) {
+
+                futureMap.put(rootJob.getRootJobName(), service.submit(rootJob));
+
+            }
+
+            service.shutdown();
+
+            service.awaitTermination(10, TimeUnit.HOURS);
 
 
-        try {
-            Assets.getInstance().closeResources();
-        } catch (Exception e) {
+            for (String rootJobName : futureMap.keySet()) {
+                printFutureResults(rootJobName, futureMap.get(rootJobName));
+            }
+
+            System.out.println("BootProsesMain has finished.");
+
+            System.out.println("Write logs files");
+            for (RootJob rootJob : rootJobs) {
+                LogsFileWriter.write(rootJob.getRootJobName());
+            }
+
+        } catch (Exception e){
             e.printStackTrace();
         }
+        finally {
+
+        Assets.closeResources();
+
+        }
+
     }
 
-    private static void printResults(Job job){
-        StringBuilder str = new StringBuilder(job.getJobConfig().getJobIdentifier());
-        switch (job.getJobResult()){
+    private static void printFutureResults(String rootJobName, Future<Integer> future) throws ExecutionException, InterruptedException {
+        StringBuilder str = new StringBuilder(rootJobName);
+        switch (future.get()){
             case 0:
                 str.append(" completed successfully.");
                 break;
