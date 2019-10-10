@@ -9,9 +9,13 @@ package ru.yakimov.Jobs;
 import org.springframework.stereotype.Component;
 import ru.yakimov.Assets;
 import ru.yakimov.config.DBConfiguration;
-import ru.yakimov.db.Log;
+import ru.yakimov.logDb.Log;
 import ru.yakimov.utils.HdfsUtils;
 import ru.yakimov.utils.SqoopUtils;
+
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
+import java.sql.SQLException;
 
 
 @Component
@@ -19,20 +23,20 @@ public class ImportSqoopDbToDirJob extends Job {
 
 
     @Override
-    public Integer call() throws Exception {
-        Log.write(jobConfigs.getJobName(), "Sqoop get task import");
+    public Integer call() throws SQLException, IOException, XMLStreamException, InterruptedException {
+        Log.write(jobConfig, "Sqoop get task import");
 
 
-        DBConfiguration dbConfig = jobConfigs.getDbConfiguration();
+        DBConfiguration dbConfig = jobConfig.getDbConfiguration();
 
-        Log.write(jobConfigs.getJobName(), "Start creating password file");
+        Log.write(jobConfig, "Start creating password file");
 
-        SqoopUtils.createPassword(dbConfig.getPassword(), jobConfigs.getJobName());
+        SqoopUtils.createPassword(dbConfig.getPassword(), jobConfig);
 
 
-        HdfsUtils.deleteDirWithLog(jobConfigs.getJobName(), jobConfigs.getDirTo());
+        HdfsUtils.deleteDirWithLog(jobConfig, jobConfig.getDirTo());
 
-        Log.write(jobConfigs.getJobName(), "Sqoop run process");
+        Log.write(jobConfig, "Sqoop run process");
 
 
         Process process = Assets.getInstance().getRt().exec(String.format("sqoop import " +
@@ -47,21 +51,24 @@ public class ImportSqoopDbToDirJob extends Job {
                 ,dbConfig.getPort()
                 ,dbConfig.getSchema()
                 ,dbConfig.getUser()
-                ,SqoopUtils.getHadoopPasswordPath(jobConfigs.getJobName())
+                ,SqoopUtils.getHadoopPasswordPath(jobConfig.getJobName())
                 ,dbConfig.getTable()
-                ,jobConfigs.getDirTo()
+                , jobConfig.getDirTo()
                 ,dbConfig.getPrimaryKeys().next()
         ));
 
-        Log.write(jobConfigs.getRootJobName(), "Waiting of end sqoop process");
+        Log.write(jobConfig, "Waiting of end sqoop process");
 
         process.waitFor();
 
-//        printProcessMessageStream(process, jobConfig.getJobIdentifier());
+        SqoopUtils.writeProcessMessageStream(process, jobConfig);
 
-//        writeResSqoop(jobConfig, process.exitValue());
 
-        HdfsUtils.deleteDirWithLog(jobConfigs.getJobName(), SqoopUtils.getHadoopPasswordPath(jobConfigs.getJobName()));
+        SqoopUtils.writeResSqoop(jobConfig, process.exitValue());
+
+        Log.write(jobConfig, "Delete password: " + SqoopUtils.getHadoopPasswordPath(jobConfig.getJobName() ));
+
+        HdfsUtils.deleteDirWithLog(jobConfig, SqoopUtils.getHadoopPasswordPath(jobConfig.getJobName()));
 
         return process.exitValue();
     }

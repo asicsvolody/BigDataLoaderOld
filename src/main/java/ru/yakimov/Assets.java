@@ -13,9 +13,14 @@ import org.apache.spark.sql.SparkSession;
 import ru.yakimov.config.AppConfiguration;
 
 import ru.yakimov.config.AppXmlLoader;
-import ru.yakimov.db.MySqlDb;
+import ru.yakimov.config.JobXmlLoader;
+import ru.yakimov.logDb.Log;
+import ru.yakimov.logDb.MySqlDb;
 
+import javax.xml.stream.XMLStreamException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 
 
 public class Assets {
@@ -23,6 +28,8 @@ public class Assets {
     public static final String SEPARATOR = "/";
 
     private final String CONF_FILE_PATH = "conf.xml";
+
+    public static final String MAIN_PROS = JobXmlLoader.createNameWithData("SYSTEM_PROSES");
 
 
     private AppConfiguration conf;
@@ -37,7 +44,7 @@ public class Assets {
     private static Assets instance;
 
 
-    public static Assets getInstance() throws Exception {
+    public static Assets getInstance() throws XMLStreamException, IOException, SQLException {
         Assets localInstance = instance;
         if(localInstance == null){
             synchronized (Assets.class){
@@ -51,21 +58,30 @@ public class Assets {
     }
 
 
-    private Assets() throws Exception {
+    private Assets() throws IOException, XMLStreamException, SQLException {
 
 
         this.conf = AppXmlLoader.readConfigApp(CONF_FILE_PATH);
+
 
 
         try {
             MySqlDb.initConnection(conf.getLogDbConfig());
         } catch (Exception e) {
             e.printStackTrace();
-            throw new Exception("Exception connection to log databese");
+            throw new SQLException("Exception connection to log database");
         }
+
+        Log.writeRoot(MAIN_PROS, "System configuration have redden");
+
+        Log.writeRoot(MAIN_PROS, "Log dataBase have connected");
+
 
 
         this.rt = Runtime.getRuntime();
+
+        Log.writeRoot(MAIN_PROS, "System Runtime have gotten ");
+
 
         SparkContext context = new SparkContext(
                 new SparkConf().setAppName("spark-App").setMaster("local[*]")
@@ -79,11 +95,17 @@ public class Assets {
 
         this.spark = SparkSession.builder().sparkContext(context).getOrCreate();
 
+        Log.writeRoot(MAIN_PROS, "Spark have configured ");
+
         try {
             this.fs = FileSystem.get(context.hadoopConfiguration());
         } catch (IOException e) {
+            e.printStackTrace();
             throw new IOException("Exception connection to Hadoop file system");
         }
+
+        Log.writeRoot(MAIN_PROS, "Hadoop file system have gotten ");
+
 
     }
 
@@ -92,6 +114,7 @@ public class Assets {
     }
 
     public SparkSession getSpark() {
+
         return spark;
     }
 

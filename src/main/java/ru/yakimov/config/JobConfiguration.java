@@ -7,6 +7,7 @@
 package ru.yakimov.config;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class JobConfiguration{
 
@@ -14,9 +15,9 @@ public class JobConfiguration{
     private String jobName;
     private String jobClass;
     private int stage;
-    private String dirFrom;
+    private List<String> dirFrom;
     private String dirTo;
-    private ArrayList<String> partitions;
+    private List<String> partitions;
     private DBConfiguration dbConfiguration;
 
     public JobConfiguration(String rootJobName) {
@@ -39,7 +40,7 @@ public class JobConfiguration{
         return stage;
     }
 
-    public String getDirFrom() {
+    public List<String> getDirFrom() {
         return dirFrom;
     }
 
@@ -67,18 +68,25 @@ public class JobConfiguration{
         this.stage = stage;
     }
 
-    public void setDirFrom(String dirFrom) {
-        this.dirFrom = dirFrom;
+    public void setDirFrom(String dirFromLine) {
+        if(this.dirFrom == null)
+            this.dirFrom = new ArrayList<>();
+        for (String dir : dirFromLine.split(",")) {
+            this.dirFrom.add(dir.trim());
+        }
     }
 
     public void setDirTo(String dirTo) {
         this.dirTo = dirTo;
     }
 
-    public void addPartitions(String partition) {
+    public void addPartitions(String partitionLine) {
         if(partitions == null)
             partitions = new ArrayList<>();
-        this.partitions.add(partition);
+
+        for (String partition : partitionLine.split(",")) {
+            this.partitions.add(partitionLine.trim());
+        }
     }
 
     public void setDbConfiguration(DBConfiguration dbConfiguration) {

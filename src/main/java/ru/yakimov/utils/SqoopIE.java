@@ -6,14 +6,7 @@
 
 package ru.yakimov.utils;
 
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import ru.yakimov.Assets;
-import ru.yakimov.config.RootJobConfiguration;
-import ru.yakimov.config.DBConfiguration;
-import ru.yakimov.db.Log;
-
-import java.io.*;
 
 public class SqoopIE {
     private final static String PASSWORD_FILE_PATH_DIR = "./";
@@ -60,7 +53,7 @@ public class SqoopIE {
 //
 //        process.waitFor();
 //
-//        printProcessMessageStream(process, jobConfig.getJobIdentifier());
+//        writeProcessMessageStream(process, jobConfig.getJobIdentifier());
 //
 //        writeResSqoop(jobConfig, process.exitValue());
 //
@@ -100,7 +93,7 @@ public class SqoopIE {
 //
 //        process.waitFor();
 //
-//        printProcessMessageStream(process, jobConfig.getJobIdentifier());
+//        writeProcessMessageStream(process, jobConfig.getJobIdentifier());
 //
 //        writeResSqoop(jobConfig, process.exitValue());
 //
@@ -128,7 +121,7 @@ public class SqoopIE {
 //    }
 //
 //
-//    public static void printProcessMessageStream(Process process, String jobIdentifier){
+//    public static void writeProcessMessageStream(Process process, String jobIdentifier){
 //        String line;
 //        try {
 //            BufferedReader input = new BufferedReader(new InputStreamReader(process.getErrorStream()));

@@ -10,15 +10,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import ru.yakimov.Jobs.ImportSqoopDbToDirJob;
-import ru.yakimov.Jobs.SparkPartitionTableJob;
+import ru.yakimov.Jobs.PartitionSparkDataJob;
 
 @Configuration
 public class JobContextConfiguration {
 
     @Bean
     @Scope("prototype")
-    public SparkPartitionTableJob loadSparkPartitionTableJob(){
-        return new SparkPartitionTableJob();
+    public PartitionSparkDataJob loadSparkPartitionTableJob(){
+        return new PartitionSparkDataJob();
     }
 
     @Bean

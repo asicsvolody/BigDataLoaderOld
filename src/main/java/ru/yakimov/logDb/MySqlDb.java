@@ -6,7 +6,7 @@
  * БД Mysql хранит информацию необходимссую для работы, логи
  * использует общее статическое подключение (singleton)
  */
-package ru.yakimov.db;
+package ru.yakimov.logDb;
 
 import ru.yakimov.config.DBConfiguration;
 
@@ -57,16 +57,16 @@ public class MySqlDb {
      * @throws Exception
      */
 
-    public static Connection getConnection() throws Exception {
+    public static Connection getConnection() throws SQLException {
 
         if (conn == null || (conn != null && !isDbConnected())) {
             try {
                 Class.forName(JDBC);
-                conn = DriverManager.getConnection(dbUrl, dbUser, dbPass);
-            } catch (Exception e) {
+            }catch (ClassNotFoundException e) {
                 System.out.println("Ошибка подключения к БД MySQL!");
-                throw e;
+                throw new SQLException("Ошибка подключения к БД MySQL!");
             }
+            conn = DriverManager.getConnection(dbUrl, dbUser, dbPass);
             conn.setAutoCommit(false);
 
             // Установка параметров
@@ -153,7 +153,7 @@ public class MySqlDb {
      * @return
      * @throws Exception
      */
-    public static Connection initConnection(DBConfiguration config) throws Exception {
+    public static Connection initConnection(DBConfiguration config) throws SQLException {
         return initConnection(config, false);
     }
 
@@ -166,7 +166,7 @@ public class MySqlDb {
      * @return
      * @throws Exception
      */
-    public static Connection initConnection(DBConfiguration config, Boolean debug) throws Exception {
+    public static Connection initConnection(DBConfiguration config, Boolean debug) throws SQLException {
         dbUrl = String.format("jdbc:mysql://%s:%s/%s?serverTimezone=UTC&zeroDateTimeBehavior=CONVERT_TO_NULL",config.getHost(),config.getPort(),config.getSchema());
         dbUser = config.getUser();
         dbPass = config.getPassword();

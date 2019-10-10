@@ -12,7 +12,6 @@ import java.util.List;
 
 public class RootJobConfiguration {
 
-
     private String rootJobName;
     private List<JobConfiguration> jobConfigs;
 

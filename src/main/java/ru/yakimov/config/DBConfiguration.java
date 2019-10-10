@@ -18,10 +18,6 @@ public class DBConfiguration {
     private String table;
     private ArrayList<String> primaryKeys;
 
-    public DBConfiguration() {
-        this.primaryKeys = new ArrayList<>();
-    }
-
 
     public String getHost() {
         return host;
@@ -71,8 +67,14 @@ public class DBConfiguration {
         this.table = table;
     }
 
-    public void setPrimaryKey(String primaryKey) {
-        this.primaryKeys.add(primaryKey);
+    public void setPrimaryKey(String primaryKeyLine) {
+        if(primaryKeys == null){
+            primaryKeys = new ArrayList<>();
+        }
+
+        for (String primaryKey : primaryKeyLine.split(",")) {
+            this.primaryKeys.add(primaryKey.trim());
+        }
     }
 
 

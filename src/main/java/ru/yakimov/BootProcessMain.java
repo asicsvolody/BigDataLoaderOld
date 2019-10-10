@@ -6,27 +6,29 @@
 
 package ru.yakimov;
 
+import org.apache.hadoop.yarn.webapp.hamlet.HamletSpec;
 import ru.yakimov.Jobs.RootJob;
-import ru.yakimov.Jobs.SubJob;
-import ru.yakimov.db.LogsFileWriter;
-import ru.yakimov.db.MySqlDb;
+import ru.yakimov.logDb.Log;
+import ru.yakimov.logDb.LogsFileWriter;
 import ru.yakimov.utils.RootJobsCreator;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.*;
 
 public class BootProcessMain {
+    private RootJob[] rootJobs;
+
 
     public BootProcessMain() {
         try {
 
-            RootJob[] rootJobs = RootJobsCreator.getRootJobsFromDir(Assets.getInstance().getConf().getJobsDir());
+            rootJobs = RootJobsCreator.getRootJobsFromDir(Assets.getInstance().getConf().getJobsDir());
 
 
             if (rootJobs == null) {
-                System.out.println("Jobs not found");
+                Log.writeRoot(Assets.MAIN_PROS, "Jobs not found");
                 return;
             }
 
@@ -34,11 +36,16 @@ public class BootProcessMain {
 
             Map<String, Future<Integer>> futureMap = new HashMap<>();
 
-            for (RootJob rootJob : rootJobs) {
+            Log.writeRoot(Assets.MAIN_PROS, "ExecutorService is ready");
 
+
+            for (RootJob rootJob : rootJobs) {
                 futureMap.put(rootJob.getRootJobName(), service.submit(rootJob));
 
+                Log.writeRoot(Assets.MAIN_PROS, rootJob.getRootJobName()+"have been run");
             }
+
+            Log.writeRoot(Assets.MAIN_PROS, "All jobs have been run");
 
             service.shutdown();
 
@@ -48,26 +55,41 @@ public class BootProcessMain {
             for (String rootJobName : futureMap.keySet()) {
                 printFutureResults(rootJobName, futureMap.get(rootJobName));
             }
+            Log.writeRoot(Assets.MAIN_PROS, "BootProsesMain has finished.");
 
-            System.out.println("BootProsesMain has finished.");
+            Log.writeRoot(Assets.MAIN_PROS, "Write logs files.");
 
-            System.out.println("Write logs files");
-            for (RootJob rootJob : rootJobs) {
-                LogsFileWriter.write(rootJob.getRootJobName());
-            }
+            Log.writeRoot(Assets.MAIN_PROS, "Finish!!!");
 
-        } catch (Exception e){
+
+
+
+        }catch (SQLException e){
             e.printStackTrace();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            Log.writeSysException(Assets.MAIN_PROS, e);
         }
         finally {
 
-        Assets.closeResources();
+            try {
+                for (RootJob rootJob : rootJobs) {
+                    LogsFileWriter.writeRootLog(rootJob.getRootJobName());
+                }
+                LogsFileWriter.writeRootLog(Assets.MAIN_PROS);
+            } catch (Exception e) {
+                System.out.println("Logs not write");
+                e.printStackTrace();
+            }
+
+            Assets.closeResources();
 
         }
 
     }
 
-    private static void printFutureResults(String rootJobName, Future<Integer> future) throws ExecutionException, InterruptedException {
+    private static void printFutureResults(String rootJobName, Future<Integer> future) throws ExecutionException, InterruptedException, SQLException {
         StringBuilder str = new StringBuilder(rootJobName);
         switch (future.get()){
             case 0:
@@ -79,6 +101,7 @@ public class BootProcessMain {
         }
 
         System.out.println(str.toString());
+        Log.writeRoot(Assets.MAIN_PROS, str.toString());
     }
 
     public static void main(String[] args) {

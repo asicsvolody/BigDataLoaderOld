@@ -6,19 +6,17 @@
 
 package ru.yakimov.config;
 
-import com.mysql.cj.x.protobuf.MysqlxDatatypes;
 import ru.yakimov.Assets;
+import ru.yakimov.logDb.Log;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.Iterator;
@@ -72,23 +70,24 @@ public class JobXmlLoader {
                         jobConfig = null;
                     }
                     if(endElement.getName().getLocalPart().equals(ROOT_JOB)){
-                        resConfig = config;
+                        if(config != null && config.getRootJobName() != null) {
+                            resConfig = config;
+                            Log.writeRoot(Assets.MAIN_PROS, "Configuration have gotten for " + resConfig.getRootJobName());
+                        }
                         break;
                     }
                 }
             }
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (XMLStreamException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
+            Log.writeSysException(Assets.MAIN_PROS, e);
         }
         return resConfig;
     }
 
-    public static JobConfiguration  createJobConfig(String rootJobName, StartElement startElementConf) {
+    @SuppressWarnings("unchecked")
+    private static JobConfiguration  createJobConfig(String rootJobName, StartElement startElementConf) {
         JobConfiguration jobConf = new JobConfiguration(rootJobName);
         Iterator<Attribute> attributes = startElementConf.getAttributes();
         while (attributes.hasNext()) {
@@ -125,16 +124,18 @@ public class JobXmlLoader {
 
     }
 
-
-
-
     private static String createJobNameFromPath(File file){
         String fileName = file.getName().split("\\.")[0];
-        String data = getFullTime();
-        return fileName + "_" + data;
+        return createNameWithData(fileName);
     }
 
-    private static String getDataNumbersOnly(String string){
+    public static String createNameWithData(String ame){
+        String data = getFullTime();
+        return ame+ "_" + data;
+
+    }
+
+    public static String getDataNumbersOnly(String string){
         StringBuilder sb = new StringBuilder();
         for (char c : string.toCharArray()) {
             if(c >= '0' && c<='9'){

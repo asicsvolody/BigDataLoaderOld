@@ -12,8 +12,12 @@ import ru.yakimov.Assets;
 import ru.yakimov.JobContextConfiguration;
 import ru.yakimov.config.JobConfiguration;
 import ru.yakimov.config.RootJobConfiguration;
+import ru.yakimov.logDb.Log;
 
+import java.awt.*;
+import java.sql.SQLException;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.*;
 
 public class RootJob implements Callable<Integer> {
@@ -27,7 +31,7 @@ public class RootJob implements Callable<Integer> {
 
     private Map<Integer, ArrayList<Job>> jobsMap;
 
-    public RootJob(RootJobConfiguration jobConfiguration) {
+    public RootJob(RootJobConfiguration jobConfiguration) throws ClassNotFoundException {
         this.rootJobName = jobConfiguration.getRootJobName();
         this.jobsMap = jobConfigsToTreeMap(jobConfiguration.getJobConfigurations());
     }
@@ -37,36 +41,44 @@ public class RootJob implements Callable<Integer> {
         int workRes = 0;
 
         if(jobsMap.isEmpty()){
+            Log.writeRoot(rootJobName, "Sub jobs not found");
             return workRes;
         }
 
-        ExecutorService service = Executors.newFixedThreadPool(5);
 
         for (Integer stage : jobsMap.keySet()) {
+            Log.writeRoot(rootJobName, "Start stage: " + stage);
+            ExecutorService service = Executors.newFixedThreadPool(6);
 
-            List<Future<Integer>> futures = new ArrayList<>();
+
+            Map<String, Future<Integer>> futuresMap = new HashMap<>();
 
             for (Job job : jobsMap.get(stage)) {
-                futures.add(service.submit(job));
+                futuresMap.put(job.jobConfig.getJobName(), service.submit(job));
+                Log.writeRoot(rootJobName, "Start job: " + job.jobConfig.getJobName());
             }
+            service.shutdown();
+
+            Log.writeRoot(rootJobName, "Have run all jobs stage: "+ stage);
+
 
             service.awaitTermination(10, TimeUnit.HOURS);
 
-            for (Future<Integer> future : futures) {
-                workRes += future.get();
-            }
 
-            if(workRes != 0){
-                break;
+            for (String jobName : futuresMap.keySet()) {
+                if(futuresMap.get(jobName).get() != 0){
+                    Log.writeRoot(rootJobName, "Error in stage: " + stage + "Job: "+ jobName, Log.Level.ERROR);
+                    Log.writeRoot(Assets.MAIN_PROS, "Error in stage: "+ stage + " in " +rootJobName+" / "+ jobName );
+                    return 1;
+                }
+
             }
         }
-
-        service.shutdown();
 
         return workRes;
     }
 
-    public Map<Integer, ArrayList<Job>> jobConfigsToTreeMap(List<JobConfiguration> jobConfigs){
+    public Map<Integer, ArrayList<Job>> jobConfigsToTreeMap(List<JobConfiguration> jobConfigs) throws ClassNotFoundException {
         Map<Integer, ArrayList<Job>> resMap = new TreeMap<>();
         for (JobConfiguration jobConfig : jobConfigs) {
             int stage = jobConfig.getStage();
@@ -74,9 +86,9 @@ public class RootJob implements Callable<Integer> {
             try {
                 job = (Job) context.getBean(Class.forName(jobConfig.getJobClass()));
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                throw new ClassNotFoundException("There is't job class: "+jobConfig.getJobClass() );
             }
-            job.setJobConfigs(jobConfig);
+            job.setJobConfig(jobConfig);
             if(!resMap.containsKey(stage)){
                 resMap.put(stage, new ArrayList<>());
             }

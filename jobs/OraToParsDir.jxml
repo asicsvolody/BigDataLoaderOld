@@ -7,19 +7,11 @@
                        schema="usersDB" table="users" primaryKey="user_id"/>
 
         </job>
-        <job jobClass="ru.yakimov.Jobs.SparkPartitionTableJob" jobDirTo="/data" partition="user_age" stage="2">
+        <job jobClass="ru.yakimov.Jobs.PartitionSparkDataJob" jobDirFrom="/tmp/data, /twttr/wrtv" jobDirTo="/data" partition="user_age" stage="2">
             <dbConf host="127.0.0.1" port="3306" user="vladimir" password="bhbyf.hnftdf"
                        schema="usersDB" table="users" primaryKey="user_id"/>
 
         </job>
 
     </rootJob>
-
-
-
-    <!--    <configuration jobClassName="ru.yakimov.Jobs.JobOraToPartitionDir" jobDirTo="/data" partition="user_age">-->
-<!--        <mysqlConf confTarget="IMPORT_MYSQL" host="127.0.0.1" port="3306" user="vladimir" password="bhbyf.hnftdf"-->
-<!--                   schema="usersDB" table="users" primaryKey="user_id"/>-->
-<!--    </configuration>-->
-
 </config>
